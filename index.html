@@ -9,19 +9,33 @@
 
         <link rel="stylesheet"
         href="styles.css">
-        <script type="javascript" src="app.js"></script>
+
+        
+        
     </head>
 
     <body>
-        <div class="col-md-3">
-            <table id="table1">
-                <tr>
-                    <div class="button" onclick="addRow()">
-                        <h1> <center>New note</center></h1>
-                        <p><div class="row"></div></p>
-                    </div>
-                </tr>
-            </table>
+        <div class="row">
+            
         </div>
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-3">
+                <table id="table1">
+                    <tr> <td>
+                        <button onclick="addRow()" id="button1">
+                            <h1>Add note</h1>
+                            <p>dd</p>
+                        </button> </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <textarea id="textarea1">
+                
+                </textarea>
+            </div>
+        </div>
+        <script type="text/javascript" src="app.js"></script>
     </body>
 </html>
