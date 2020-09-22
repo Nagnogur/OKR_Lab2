@@ -4,7 +4,19 @@ body {
 
   }
 
-button{
+  .btn{
+  margin-left: -30%; 
+  width: 160%; 
+  height: 100%; 
+  background-color: 
+  rgb(195, 143, 255, 187); 
+  border: 1px solid black;
+  border-radius: 0px;
+  color: black;
+  
+}
+  
+#button1{
     height:100px;
     width:90%;
     background-color: rgb(29, 28, 35, 30);
@@ -13,9 +25,9 @@ button{
     color: gainsboro;
     text-indent: 3px;
     text-align: center;
-    border-radius: 12px;
     transition-duration: 0.4s;
     font-size: 200%;
+    
 }
 
 button:hover {
@@ -34,4 +46,23 @@ textarea{
   height: 600px;
 }
 
+.noteCard{
+  height: 100px; 
+  background-color: rgb(29, 28, 35, 30);
+  color: gainsboro;
+  border-radius: 0px; 
+  border: 1px solid black;
+}
+
+#notes{
+  
+  background-color: gray;
+  width: 90%; 
+  margin-left: 40px; 
+  max-height: 500px;
+  overflow: auto;
+  overflow-x: hidden;
+  /*overflow-y: scroll;*/
+  
+}
 /*html { overflow-x: hidden; }*/
