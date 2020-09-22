@@ -42,7 +42,9 @@ document.addEventListener('click',function(e){
      }
  });*/
 
- showNotes();
+showNotes();
+
+var selected;
 
  function showNotes() {
     var notes = localStorage.getItem("notes");
@@ -51,27 +53,60 @@ document.addEventListener('click',function(e){
     } else {
       notesObj = JSON.parse(notes);
     }
-    console.log(notes);
     let html = "";
     notesObj.forEach(function(element, index) {
-      html += `
-              <div class="noteCard my-2 mx-2 card">
-                      <div class="card-body">
-                          <h5 class="card-title">${element.title}</h5>
-                          <p class="card-text"> ${element.text}</p>
-                          <button id="${index}"onclick="deleteNote(this.id)" class="btn btn-primary">Delete Note</button>
-                      </div>
-                  </div>`;
+      var cuttedText;
+      if (element.text.length > 26){
+        cuttedText = element.text.slice(0, 24) + "...";
+      }
+      else{
+        cuttedText = element.text;
+      }
+      html += `<div class="noteCard col-md-9 card">
+                  <div class="card-body" onclick="Select(this.id)">
+                    <h5 class="card-title" style="line-height: 80%; margin-top: -5%;">${element.title}</h5>
+                    <p class="card-date" > ${element.date} </p>
+                    <p class="card-text" style="margin-top: -10%; color: rgb(179, 179, 179);"> <small> ${cuttedText} </small> </p>
+                  </div>
+                </div>
+  <div class="delBtn col-md-3">
+      <button id="${index}"onclick="deleteNote(this.id)" class="btn btn-primary"> Delete </button>
+  </div>`;
     });
     var notesElm = document.getElementById("notes");
       notesElm.innerHTML = html;
+};
+
+function Select(index){
+  if (!confirm("Are you sure?")){
+    return;
   }
+  var notes = localStorage.getItem("notes");
+  
+  if (notes == null) {
+    notesObj = [];
+  } else {
+    notesObj = JSON.parse(notes);
+  }
+
+  notesObj.splice(index, 1);
+  localStorage.setItem("notes", JSON.stringify(notesObj));
+  showNotes();
+}
 
 var addBtn = document.getElementById("button1");
 addBtn.addEventListener("click", function(e) {
-    console.log(2121);
   var addTxt = document.getElementById("textarea1");
   var addTitle = document.getElementById("noteName");
+  var today = new Date();
+  var date = today.getDate() + '.' + (today.getMonth()+1) + '.' + today.getFullYear();
+  var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+  if (addTitle.value == "")
+  {
+   
+    alert("Please enter note name");
+    return;
+  }
   var notes = localStorage.getItem("notes");
   if (notes == null) {
     notesObj = [];
@@ -80,9 +115,10 @@ addBtn.addEventListener("click", function(e) {
   }
   var myObj = {
     title: addTitle.value,
-    text: addTxt.value
+    text: addTxt.value,
+    date: date + " " + time
   }
-  notesObj.push(myObj);
+  notesObj.unshift(myObj);
   localStorage.setItem("notes", JSON.stringify(notesObj));
   addTxt.value = "";
   addTitle.value = "";
@@ -92,7 +128,9 @@ addBtn.addEventListener("click", function(e) {
 
 function deleteNote(index) {
       
-    
+      if (!confirm("Are you sure?")){
+        return;
+      }
       var notes = localStorage.getItem("notes");
       
       if (notes == null) {
