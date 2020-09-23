@@ -1,11 +1,13 @@
 window.addEventListener("hashchange", showNotes, false);
 
-showNotes();
+var addTxt = window.document.getElementById("textarea1");
+var addTitle = window.document.getElementById("noteName");
 
-var selected;
+showNotes();
 
 function showNotes() {
   var notes = localStorage.getItem("notes");
+  
   if (notes == null) {
     notesObj = [];
   } 
@@ -28,7 +30,7 @@ function showNotes() {
     else{
       cuttedName = element.title;
     }
-    html += `<div class="row">
+    html += `<div class="row" style="margin-left: 0px;">
                 <div class="noteCard col-md-9 card">
                   <div class="card-body" onclick="Select(this.id)" id="${index}">
                     <h5 class="card-title" style="line-height: 80%; margin-top: -5%;">${cuttedName}</h5>
@@ -41,8 +43,6 @@ function showNotes() {
   });
   var notesElm = document.getElementById("notes");
   notesElm.innerHTML = html;
-  var addTxt = document.getElementById("textarea1");
-  var addTitle = document.getElementById("noteName");
   var ref = location.hash;
   if (ref == ""){
     addTxt.value = "";
@@ -51,7 +51,6 @@ function showNotes() {
   else{
     ref = ref.slice(1, ref.length);
     var refNote = notesObj.filter(obj => {return obj.ref === ref});
-    console.log(refNote);
     addTitle.value = refNote[0].title;
     addTxt.value = refNote[0].text;
   }
@@ -59,8 +58,6 @@ function showNotes() {
 
 function Select(index){
   var notes = localStorage.getItem("notes");
-  var addTxt = document.getElementById("textarea1");
-  var addTitle = document.getElementById("noteName");
   if (notes == null) {
     notesObj = [];
   } else {
@@ -69,7 +66,7 @@ function Select(index){
   location.hash = notesObj[index].ref;
   addTitle.value = notesObj[index].title;
   addTxt.value = notesObj[index].text;
-  localStorage.setItem("notes", JSON.stringify(notesObj));
+  var dd = document.getElementById(index);
 }
 
 function AddZero(time){
@@ -84,8 +81,7 @@ addBtn.addEventListener("click", function(e) {
   if (location.hash != ""){
     return;
   }
-  var addTxt = document.getElementById("textarea1");
-  var addTitle = document.getElementById("noteName");
+
   var today = new Date();
   var date = AddZero(today.getDate()) + '.' + AddZero(today.getMonth() + 1) + '.' + today.getFullYear();
   var time = AddZero(today.getHours()) + ":" + AddZero(today.getMinutes()) + ":" + AddZero(today.getSeconds());
@@ -134,4 +130,39 @@ function deleteNote(index) {
   localStorage.setItem("notes", JSON.stringify(notesObj));
   showNotes();
 }
-    
+
+addTxt.addEventListener('input', function(e){
+  if (location.hash == ""){
+    return;
+  }
+  var notes = localStorage.getItem("notes");
+  if (notes == null) {
+    notesObj = [];
+  } 
+  else {
+    notesObj = JSON.parse(notes);
+  }
+  var ref = location.hash.slice(1, location.hash.length);
+  var refNote = notesObj.filter(obj => {return obj.ref === ref});
+  refNote[0].text = addTxt.value;
+  localStorage.setItem("notes", JSON.stringify(notesObj));
+  showNotes();
+});
+
+addTitle.addEventListener('input', function(e){
+  if (location.hash == ""){
+    return;
+  }
+  var notes = localStorage.getItem("notes");
+  if (notes == null) {
+    notesObj = [];
+  } 
+  else {
+    notesObj = JSON.parse(notes);
+  }
+  var ref = location.hash.slice(1, location.hash.length);
+  var refNote = notesObj.filter(obj => {return obj.ref === ref});
+  refNote[0].title = addTitle.value;
+  localStorage.setItem("notes", JSON.stringify(notesObj));
+  showNotes();
+});
