@@ -1,17 +1,21 @@
 body {
     background-color:rgb(26, 26, 29);
-    color:gainsboro; 
-
+    color:gainsboro;
   }
 
-  .btn{
-  margin-left: -30%; 
-  width: 160%; 
+.btn{
+  width: 100%; 
   height: 100%; 
-  background-color: 
-  rgb(195, 143, 255, 187); 
+  background-color: rgb(195, 143, 255, 187); 
   border: 1px solid black;
   border-radius: 0px;
+  color: black;
+  font-size: 120%;
+}
+
+.btn:hover {
+  border-color: gainsboro;
+  background-color: #a660fc;
   color: black;
 }
   
@@ -47,6 +51,7 @@ textarea{
 
 .noteCard{
   height: 100px; 
+  width: 260px;
   background-color: rgb(29, 28, 35, 30);
   color: gainsboro;
   border-radius: 0px; 
@@ -61,7 +66,19 @@ textarea{
   max-height: 500px;
   overflow: auto;
   overflow-x: hidden;
+  
   /*overflow-y: scroll;*/
   
 }
-/*html { overflow-x: hidden; }*/
+
+#HomePage:link{
+  color: gainsboro;
+  text-decoration: none;
+}
+
+#HomePage:visited {
+  color: gainsboro;
+  text-decoration: none;
+}
+
+html { overflow-x: hidden; }
