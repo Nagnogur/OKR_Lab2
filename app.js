@@ -3,6 +3,9 @@ window.addEventListener("hashchange", showNotes, false);
 var addTxt = window.document.getElementById("textarea1");
 var addTitle = window.document.getElementById("noteName");
 
+var domain = location.hash;
+console.log(domain);
+
 showNotes();
 
 function showNotes() {
@@ -44,7 +47,7 @@ function showNotes() {
   var notesElm = document.getElementById("notes");
   notesElm.innerHTML = html;
   var ref = location.hash;
-  if (ref == ""){
+  if (ref == domain){
     addTxt.value = "";
     addTitle.value = "";
   }
@@ -78,7 +81,7 @@ function AddZero(time){
 
 var addBtn = document.getElementById("button1");
 addBtn.addEventListener("click", function(e) {
-  if (location.hash != ""){
+  if (location.hash != domain){
     return;
   }
 
@@ -132,7 +135,7 @@ function deleteNote(index) {
 }
 
 addTxt.addEventListener('input', function(e){
-  if (location.hash == ""){
+  if (location.hash == domain){
     return;
   }
   var notes = localStorage.getItem("notes");
@@ -150,7 +153,7 @@ addTxt.addEventListener('input', function(e){
 });
 
 addTitle.addEventListener('input', function(e){
-  if (location.hash == ""){
+  if (location.hash == domain){
     return;
   }
   var notes = localStorage.getItem("notes");
