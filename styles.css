@@ -49,11 +49,11 @@ textarea{
   height: 600px;
 }
 
-.noteCard{
+.card-body{
   height: 100px; 
   width: 245px;
   background-color: rgb(29, 28, 35, 30);
-  color: gainsboro;
+  color: rgb(220, 220, 220);
   border-radius: 0px; 
   border: 1px solid black;
 }
@@ -79,6 +79,11 @@ textarea{
 #HomePage:visited {
   color: gainsboro;
   text-decoration: none;
+}
+
+.card-text{
+  margin-top: -10%; 
+
 }
 
 html { overflow-x: hidden; }

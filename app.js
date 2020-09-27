@@ -3,12 +3,13 @@ window.addEventListener("hashchange", showNotes, false);
 var addTxt = window.document.getElementById("textarea1");
 var addTitle = window.document.getElementById("noteName");
 
-var domain = location.hash;
-console.log(domain);
-
 showNotes();
 
+var selected;
+var k = 0;
+
 function showNotes() {
+  console.log(k);
   var notes = localStorage.getItem("notes");
   
   if (notes == null) {
@@ -19,6 +20,7 @@ function showNotes() {
   }
   let html = "";
   notesObj.forEach(function(element, index) {
+    
     var cuttedText;
     if (element.text.length > 26){
       cuttedText = element.text.slice(0, 24) + "...";
@@ -34,20 +36,21 @@ function showNotes() {
       cuttedName = element.title;
     }
     html += `<div class="row" style="margin-left: 0px;">
-                <div class="noteCard col-md-9 card">
-                  <div class="card-body" onclick="Select(this.id)" id="${index}">
+                
+                  <div class="card-body col-md-9 card" onclick="Select(this.id)" id="${index}">
                     <h5 class="card-title" style="line-height: 80%; margin-top: -5%;">${cuttedName}</h5>
                     <p class="card-date" > ${element.date} </p>
-                    <p class="card-text" style="margin-top: -10%; color: rgb(179, 179, 179);"> <small> ${cuttedText} </small> </p>
-                  </div>
+                    <p class="card-text"> <small> ${cuttedText} </small> </p>
+                  
                 </div>
                 <button id="${index}"onclick="deleteNote(this.id)" class="btn col-md-3"> Delete </button>
               </div>`;
+    
   });
   var notesElm = document.getElementById("notes");
   notesElm.innerHTML = html;
   var ref = location.hash;
-  if (ref == domain){
+  if (ref == ""){
     addTxt.value = "";
     addTitle.value = "";
   }
@@ -56,6 +59,8 @@ function showNotes() {
     var refNote = notesObj.filter(obj => {return obj.ref === ref});
     addTitle.value = refNote[0].title;
     addTxt.value = refNote[0].text;
+    var dd = document.getElementById(selected);
+    dd.style = "background-color:#CF6679; color:black;";
   }
 };
 
@@ -66,9 +71,11 @@ function Select(index){
   } else {
     notesObj = JSON.parse(notes);
   }
+  selected = index;
   location.hash = notesObj[index].ref;
   addTitle.value = notesObj[index].title;
   addTxt.value = notesObj[index].text;
+  localStorage.setItem("notes", JSON.stringify(notesObj));
   var dd = document.getElementById(index);
 }
 
@@ -81,7 +88,7 @@ function AddZero(time){
 
 var addBtn = document.getElementById("button1");
 addBtn.addEventListener("click", function(e) {
-  if (location.hash != domain){
+  if (location.hash != ""){
     return;
   }
 
@@ -109,10 +116,10 @@ addBtn.addEventListener("click", function(e) {
   }
   notesObj.unshift(myObj);
   localStorage.setItem("notes", JSON.stringify(notesObj));
-  /*addTxt.value = "";
-  addTitle.value = "";*/
+  addTxt.value = "";
+  addTitle.value = "";
 
-  location.hash = hash;
+  //location.hash = hash;
 
 //   console.log(notesObj);
   showNotes();
@@ -135,7 +142,7 @@ function deleteNote(index) {
 }
 
 addTxt.addEventListener('input', function(e){
-  if (location.hash == domain){
+  if (location.hash == ""){
     return;
   }
   var notes = localStorage.getItem("notes");
@@ -153,7 +160,7 @@ addTxt.addEventListener('input', function(e){
 });
 
 addTitle.addEventListener('input', function(e){
-  if (location.hash == domain){
+  if (location.hash == ""){
     return;
   }
   var notes = localStorage.getItem("notes");
