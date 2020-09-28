@@ -8,6 +8,16 @@ showNotes();
 var selected;
 var k = 0;
 
+function compare(a, b) {
+  let comparison = 0;
+  if (b.changeTime > a.changeTime) {
+    comparison = 1;
+  } else if (b.changeTime < a.changeTime) {
+    comparison = -1;
+  }
+  return comparison;
+}
+
 function showNotes() {
   console.log(k);
   var notes = localStorage.getItem("notes");
@@ -19,6 +29,8 @@ function showNotes() {
     notesObj = JSON.parse(notes);
   }
   let html = "";
+  notesObj.sort(compare);
+  localStorage.setItem("notes", JSON.stringify(notesObj));
   notesObj.forEach(function(element, index) {
     
     var cuttedText;
@@ -112,7 +124,8 @@ addBtn.addEventListener("click", function(e) {
     title: addTitle.value,
     text: addTxt.value,
     date: date + " " + time,
-    ref: hash
+    ref: hash,
+    changeTime: date + " " + time
   }
   notesObj.unshift(myObj);
   localStorage.setItem("notes", JSON.stringify(notesObj));
@@ -152,10 +165,15 @@ addTxt.addEventListener('input', function(e){
   else {
     notesObj = JSON.parse(notes);
   }
+  var today = new Date();
+  var date = AddZero(today.getDate()) + '.' + AddZero(today.getMonth() + 1) + '.' + today.getFullYear();
+  var time = AddZero(today.getHours()) + ":" + AddZero(today.getMinutes()) + ":" + AddZero(today.getSeconds());
   var ref = location.hash.slice(1, location.hash.length);
   var refNote = notesObj.filter(obj => {return obj.ref === ref});
   refNote[0].text = addTxt.value;
+  refNote[0].changeTime = date + " " + time;
   localStorage.setItem("notes", JSON.stringify(notesObj));
+  selected = 0;
   showNotes();
 });
 
