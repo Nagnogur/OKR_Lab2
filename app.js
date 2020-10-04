@@ -24,8 +24,7 @@ function showNotes() {
   notesObj.sort(compare);
   localStorage.setItem("notes", JSON.stringify(notesObj));
 
-  var str = getDate().split(" ").map(Number);
-  var date = new Date(str[0], str[1], str[2], str[3], str[4], str[5]);
+  
   
 
 var formatter = new Intl.DateTimeFormat("en", {
@@ -39,6 +38,8 @@ var formatter = new Intl.DateTimeFormat("en", {
 });
   
     notesObj.forEach(function(element, index) {
+      var str = element.changeTime.split(" ").map(Number);
+      var date = new Date(str[0], str[1], str[2], str[3], str[4], str[5]);
     html += `<div class="row" style="margin-left: 0px;">
                   <div class="card-body col-md-9 card" onclick="Select(this.id)" id="${index}">
                     <h5 class="card-title">${element.title}</h5>
