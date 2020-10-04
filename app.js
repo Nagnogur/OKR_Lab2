@@ -6,7 +6,6 @@ var addTitle = window.document.getElementById("noteName");
 showNotes();
 
 var selected;
-var k = 0;
 
 function compare(a, b) {
   let comparison = 0;
@@ -19,41 +18,32 @@ function compare(a, b) {
 }
 
 function showNotes() {
-  console.log(k);
   var notes = localStorage.getItem("notes");
-  
-  if (notes == null) {
-    notesObj = [];
-  } 
-  else {
-    notesObj = JSON.parse(notes);
-  }
+  notesObj = JSON.parse(notes);
   let html = "";
   notesObj.sort(compare);
   localStorage.setItem("notes", JSON.stringify(notesObj));
-  notesObj.forEach(function(element, index) {
-    
-    var cuttedText;
-    if (element.text.length > 26){
-      cuttedText = element.text.slice(0, 24) + "...";
-    }
-    else{
-      cuttedText = element.text;
-    }
-    var cuttedName;
-    if (element.title.length > 16){
-      cuttedName = element.title.slice(0, 16) + "...";
-    }
-    else{
-      cuttedName = element.title;
-    }
+
+  var str = getDate().split(" ").map(Number);
+  var date = new Date(str[0], str[1], str[2], str[3], str[4], str[5]);
+  
+
+var formatter = new Intl.DateTimeFormat("en", {
+  weekday: "long",
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+  hour: "numeric",
+  minute: "numeric",
+  second: "numeric"
+});
+  
+    notesObj.forEach(function(element, index) {
     html += `<div class="row" style="margin-left: 0px;">
-                
                   <div class="card-body col-md-9 card" onclick="Select(this.id)" id="${index}">
-                    <h5 class="card-title" style="line-height: 80%; margin-top: -5%;">${cuttedName}</h5>
-                    <p class="card-date" > ${element.date} </p>
-                    <p class="card-text"> <small> ${cuttedText} </small> </p>
-                  
+                    <h5 class="card-title">${element.title}</h5>
+                    <p class="card-date"> ${formatter.format(date)} </p>
+                    <p class="card-text"> <small> ${element.text} </small> </p>
                 </div>
                 <button id="${index}"onclick="deleteNote(this.id)" class="btn col-md-3"> Delete </button>
               </div>`;
@@ -61,28 +51,29 @@ function showNotes() {
   });
   var notesElm = document.getElementById("notes");
   notesElm.innerHTML = html;
-  var ref = location.hash;
-  if (ref == ""){
+  if (location.hash == ""){
     addTxt.value = "";
     addTitle.value = "";
   }
   else{
-    ref = ref.slice(1, ref.length);
-    var refNote = notesObj.filter(obj => {return obj.ref === ref});
+    var refNote = GetHash(notesObj);
     addTitle.value = refNote[0].title;
     addTxt.value = refNote[0].text;
-    var dd = document.getElementById(selected);
-    dd.style = "background-color:#CF6679; color:black;";
+    var selectedNote = document.getElementById(selected);
+    selectedNote.style = "background-color:#CF6679; color:black;";
   }
 };
 
+function GetHash(notesObj){
+  var ref = location.hash;
+  ref = ref.slice(1, ref.length);
+  var refNote = notesObj.filter(obj => {return obj.ref === ref});
+  return refNote;
+}
+
 function Select(index){
   var notes = localStorage.getItem("notes");
-  if (notes == null) {
-    notesObj = [];
-  } else {
-    notesObj = JSON.parse(notes);
-  }
+  notesObj = JSON.parse(notes);
   selected = index;
   location.hash = notesObj[index].ref;
   addTitle.value = notesObj[index].title;
@@ -104,29 +95,25 @@ addBtn.addEventListener("click", function(e) {
     return;
   }
 
-  var today = new Date();
-  var date = AddZero(today.getDate()) + '.' + AddZero(today.getMonth() + 1) + '.' + today.getFullYear();
-  var time = AddZero(today.getHours()) + ":" + AddZero(today.getMinutes()) + ":" + AddZero(today.getSeconds());
+  var time = getDate();
   if (addTitle.value == "")
   {
     alert("Please enter note name");
     return;
   }
   var notes = localStorage.getItem("notes");
-  if (notes == null) {
-    notesObj = [];
-  } 
-  else {
-    notesObj = JSON.parse(notes);
-  }
+  notesObj = JSON.parse(notes);
   var hash = addTitle.value;
   var myObj = {
     title: addTitle.value,
     text: addTxt.value,
-    date: date + " " + time,
-    ref: hash,
-    changeTime: date + " " + time
+    date: time,
+    ref: ID(addTitle.value),
+    changeTime: time
   }
+
+ //console.log(ID(myObj.title));
+
   notesObj.unshift(myObj);
   localStorage.setItem("notes", JSON.stringify(notesObj));
   addTxt.value = "";
@@ -143,15 +130,23 @@ function deleteNote(index) {
     return;
   }
   var notes = localStorage.getItem("notes");
-  if (notes == null) {
-    notesObj = [];
-  } 
-  else {
-    notesObj = JSON.parse(notes);
+  notesObj = JSON.parse(notes);
+  if (index == selected){
+    location.hash = "";
+    selected = null;
+  } else if (index < selected){
+    selected--;
   }
   notesObj.splice(index, 1);
   localStorage.setItem("notes", JSON.stringify(notesObj));
   showNotes();
+}
+
+function getDate(){
+  var today = new Date();
+  var date = today.getFullYear() + ' ' + AddZero(today.getMonth()) + ' ' + AddZero(today.getDate());
+  var time = AddZero(today.getHours()) + " " + AddZero(today.getMinutes()) + " " + AddZero(today.getSeconds());
+  return date + " " + time;
 }
 
 addTxt.addEventListener('input', function(e){
@@ -159,19 +154,14 @@ addTxt.addEventListener('input', function(e){
     return;
   }
   var notes = localStorage.getItem("notes");
-  if (notes == null) {
-    notesObj = [];
-  } 
-  else {
-    notesObj = JSON.parse(notes);
-  }
-  var today = new Date();
-  var date = AddZero(today.getDate()) + '.' + AddZero(today.getMonth() + 1) + '.' + today.getFullYear();
-  var time = AddZero(today.getHours()) + ":" + AddZero(today.getMinutes()) + ":" + AddZero(today.getSeconds());
-  var ref = location.hash.slice(1, location.hash.length);
-  var refNote = notesObj.filter(obj => {return obj.ref === ref});
+  notesObj = JSON.parse(notes);
+  
+  
+  var time = getDate();
+
+  var refNote = GetHash(notesObj);
   refNote[0].text = addTxt.value;
-  refNote[0].changeTime = date + " " + time;
+  refNote[0].changeTime = time;
   localStorage.setItem("notes", JSON.stringify(notesObj));
   selected = 0;
   showNotes();
@@ -182,15 +172,21 @@ addTitle.addEventListener('input', function(e){
     return;
   }
   var notes = localStorage.getItem("notes");
-  if (notes == null) {
-    notesObj = [];
-  } 
-  else {
-    notesObj = JSON.parse(notes);
-  }
-  var ref = location.hash.slice(1, location.hash.length);
-  var refNote = notesObj.filter(obj => {return obj.ref === ref});
+  notesObj = JSON.parse(notes);
+  
+  
+  var time = getDate();
+
+  var refNote = GetHash(notesObj);
   refNote[0].title = addTitle.value;
+  refNote[0].changeTime = time;
   localStorage.setItem("notes", JSON.stringify(notesObj));
+  selected = 0;
   showNotes();
 });
+
+var ID = function (name) {
+  var len = Math.min(name.length, 4);
+
+  return name.substr(0, len) + Math.random().toString(36).substr(2, 9);
+};
