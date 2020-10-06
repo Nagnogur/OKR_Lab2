@@ -19,15 +19,15 @@ function compare(a, b) {
 
 function showNotes() {
   var notes = localStorage.getItem("notes");
+  selected = localStorage.getItem("select");
   notesObj = JSON.parse(notes);
   let html = "";
   notesObj.sort(compare);
   localStorage.setItem("notes", JSON.stringify(notesObj));
-
   
   
 
-var formatter = new Intl.DateTimeFormat("en", {
+var formatter = new Intl.DateTimeFormat("ru", {
   weekday: "long",
   year: "numeric",
   month: "long",
@@ -76,6 +76,7 @@ function Select(index){
   var notes = localStorage.getItem("notes");
   notesObj = JSON.parse(notes);
   selected = index;
+  localStorage.setItem("select", selected);
   location.hash = notesObj[index].ref;
   addTitle.value = notesObj[index].title;
   addTxt.value = notesObj[index].text;
@@ -165,6 +166,7 @@ addTxt.addEventListener('input', function(e){
   refNote[0].changeTime = time;
   localStorage.setItem("notes", JSON.stringify(notesObj));
   selected = 0;
+  localStorage.setItem("select", selected);
   showNotes();
 });
 
@@ -183,6 +185,7 @@ addTitle.addEventListener('input', function(e){
   refNote[0].changeTime = time;
   localStorage.setItem("notes", JSON.stringify(notesObj));
   selected = 0;
+  localStorage.setItem("select", selected);
   showNotes();
 });
 
