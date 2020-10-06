@@ -20,17 +20,22 @@ body {
 }
   
 #button1{
-    height:100px;
-    width:100%;
-    background-color: rgb(29, 28, 35, 30);
-    margin-left: 10px;
-    border: 1px solid black;
-    color: gainsboro;
-    text-indent: 3px;
-    text-align: center;
-    transition-duration: 0.4s;
-    font-size: 200%;
-    
+  height:100px;
+  width:100%;
+  background-color: rgb(29, 28, 35, 30);
+  margin-left: 10px;
+  border: 1px solid black;
+  color: gainsboro;
+  text-indent: 3px;
+  text-align: center;
+  transition-duration: 0.4s;
+  font-size: 200%;
+}
+
+#lableName{
+  text-align: right; 
+  font-size: 200%; 
+  color: gainsboro;
 }
 
 textarea{
@@ -40,7 +45,12 @@ textarea{
   color: gainsboro;
 }
 
-#textarea1{
+#noteName {
+  font-size: 150%; 
+  height: 50px;
+}
+
+#noteContent{
   height: 600px;
 }
 
@@ -57,16 +67,12 @@ textarea{
 }
 
 #notes{
-  
   background-color: gray;
   width: 100%; 
   margin-left: 10px; 
   max-height: 500px;
   overflow: auto;
-  overflow-x: hidden;
-  
-  /*overflow-y: scroll;*/
-  
+  overflow-x: hidden;  
 }
 
 #HomePage:link{

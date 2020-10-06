@@ -1,6 +1,6 @@
 window.addEventListener("hashchange", showNotes, false);
 
-var addTxt = window.document.getElementById("textarea1");
+var addTxt = window.document.getElementById("noteContent");
 var addTitle = window.document.getElementById("noteName");
 
 showNotes();
@@ -14,6 +14,7 @@ function compare(a, b) {
   }
   return comparison;
 }
+
 
 function showNotes() {
   var notes = localStorage.getItem("notes");
@@ -31,15 +32,16 @@ function showNotes() {
     minute: "numeric",
     second: "numeric"
   });
-    notesObj.forEach(function(element, index) {
-      var str = element.changeTime.split(" ").map(Number);
-      var date = new Date(str[0], str[1], str[2], str[3], str[4], str[5]);
+  
+  notesObj.forEach(function(element, index) {
+    var str = element.changeTime.split(" ").map(Number);
+    var date = new Date(str[0], str[1], str[2], str[3], str[4], str[5]);
     html += `<div class="row" style="margin-left: 0px;">
                   <div class="card-body col-md-9 card" onclick="Select(this.id)" id="${index}">
                     <h5 class="card-title">${element.title}</h5>
                     <p class="card-date"> ${formatter.format(date)} </p>
                     <p class="card-text"> <small> ${element.text} </small> </p>
-                </div>
+                  </div>
                 <button id="${index}"onclick="deleteNote(this.id)" class="btn col-md-3"> Delete </button>
               </div>`;
     
@@ -59,14 +61,14 @@ function showNotes() {
   }
 };
 
+
 function GetHash(notesObj){
   var ref = location.hash;
   ref = ref.slice(1, ref.length);
-  //var refNote = notesObj.filter(obj => {return obj.ref === ref});
   var index = notesObj.findIndex(obj => {return obj.ref === ref});
-  //console.log(ind);
   return index;
 }
+
 
 function Select(index){
   var notes = localStorage.getItem("notes");
@@ -77,6 +79,7 @@ function Select(index){
   localStorage.setItem("notes", JSON.stringify(notesObj));
   var dd = document.getElementById(index);
 }
+
 
 function AddZero(time){
   if (time < 10){
@@ -116,6 +119,7 @@ addBtn.addEventListener("click", function(e) {
   showNotes();
 });
 
+
 function deleteNote(index) {
   if (!confirm("Are you sure?")){
     return;
@@ -130,6 +134,7 @@ function deleteNote(index) {
   showNotes();
 }
 
+
 function getDate(){
   var today = new Date();
   var date = today.getFullYear() + ' ' + AddZero(today.getMonth()) + ' ' + AddZero(today.getDate());
@@ -137,14 +142,14 @@ function getDate(){
   return date + " " + time;
 }
 
+
 addTxt.addEventListener('input', function(e){
   if (location.hash == ""){
     return;
   }
   var notes = localStorage.getItem("notes");
   notesObj = JSON.parse(notes);
-  
-  
+
   var time = getDate();
 
   var ind = GetHash(notesObj);
@@ -153,6 +158,7 @@ addTxt.addEventListener('input', function(e){
   localStorage.setItem("notes", JSON.stringify(notesObj));
   showNotes();
 });
+
 
 addTitle.addEventListener('input', function(e){
   if (location.hash == ""){
@@ -170,8 +176,8 @@ addTitle.addEventListener('input', function(e){
   showNotes();
 });
 
+
 var ID = function (name) {
   var len = Math.min(name.length, 4);
-
   return name.substr(0, len) + Math.random().toString(36).substr(2, 9);
 };
