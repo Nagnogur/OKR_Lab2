@@ -5,8 +5,6 @@ var addTitle = window.document.getElementById("noteName");
 
 showNotes();
 
-var selected;
-
 function compare(a, b) {
   let comparison = 0;
   if (b.changeTime > a.changeTime) {
@@ -19,24 +17,20 @@ function compare(a, b) {
 
 function showNotes() {
   var notes = localStorage.getItem("notes");
-  selected = localStorage.getItem("select");
   notesObj = JSON.parse(notes);
   let html = "";
   notesObj.sort(compare);
   localStorage.setItem("notes", JSON.stringify(notesObj));
-  
-  
 
-var formatter = new Intl.DateTimeFormat("ru", {
-  weekday: "long",
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-  hour: "numeric",
-  minute: "numeric",
-  second: "numeric"
-});
-  
+  var formatter = new Intl.DateTimeFormat("en", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric"
+  });
     notesObj.forEach(function(element, index) {
       var str = element.changeTime.split(" ").map(Number);
       var date = new Date(str[0], str[1], str[2], str[3], str[4], str[5]);
@@ -57,10 +51,10 @@ var formatter = new Intl.DateTimeFormat("ru", {
     addTitle.value = "";
   }
   else{
-    var refNote = GetHash(notesObj);
-    addTitle.value = refNote[0].title;
-    addTxt.value = refNote[0].text;
-    var selectedNote = document.getElementById(selected);
+    var ind = GetHash(notesObj);
+    addTitle.value = notesObj[ind].title;
+    addTxt.value = notesObj[ind].text;
+    var selectedNote = document.getElementById(ind);
     selectedNote.style = "background-color:#CF6679; color:black;";
   }
 };
@@ -68,15 +62,15 @@ var formatter = new Intl.DateTimeFormat("ru", {
 function GetHash(notesObj){
   var ref = location.hash;
   ref = ref.slice(1, ref.length);
-  var refNote = notesObj.filter(obj => {return obj.ref === ref});
-  return refNote;
+  //var refNote = notesObj.filter(obj => {return obj.ref === ref});
+  var index = notesObj.findIndex(obj => {return obj.ref === ref});
+  //console.log(ind);
+  return index;
 }
 
 function Select(index){
   var notes = localStorage.getItem("notes");
   notesObj = JSON.parse(notes);
-  selected = index;
-  localStorage.setItem("select", selected);
   location.hash = notesObj[index].ref;
   addTitle.value = notesObj[index].title;
   addTxt.value = notesObj[index].text;
@@ -114,16 +108,11 @@ addBtn.addEventListener("click", function(e) {
     changeTime: time
   }
 
- //console.log(ID(myObj.title));
-
   notesObj.unshift(myObj);
   localStorage.setItem("notes", JSON.stringify(notesObj));
   addTxt.value = "";
   addTitle.value = "";
 
-  //location.hash = hash;
-
-//   console.log(notesObj);
   showNotes();
 });
 
@@ -133,11 +122,8 @@ function deleteNote(index) {
   }
   var notes = localStorage.getItem("notes");
   notesObj = JSON.parse(notes);
-  if (index == selected){
+  if (index == GetHash(notesObj)){
     location.hash = "";
-    selected = null;
-  } else if (index < selected){
-    selected--;
   }
   notesObj.splice(index, 1);
   localStorage.setItem("notes", JSON.stringify(notesObj));
@@ -161,12 +147,10 @@ addTxt.addEventListener('input', function(e){
   
   var time = getDate();
 
-  var refNote = GetHash(notesObj);
-  refNote[0].text = addTxt.value;
-  refNote[0].changeTime = time;
+  var ind = GetHash(notesObj);
+  notesObj[ind].text = addTxt.value;
+  notesObj[ind].changeTime = time;
   localStorage.setItem("notes", JSON.stringify(notesObj));
-  selected = 0;
-  localStorage.setItem("select", selected);
   showNotes();
 });
 
@@ -176,16 +160,13 @@ addTitle.addEventListener('input', function(e){
   }
   var notes = localStorage.getItem("notes");
   notesObj = JSON.parse(notes);
-  
-  
+
   var time = getDate();
 
-  var refNote = GetHash(notesObj);
-  refNote[0].title = addTitle.value;
-  refNote[0].changeTime = time;
+  var ind = GetHash(notesObj);
+  notesObj[ind].text = addTxt.value;
+  notesObj[ind].changeTime = time;
   localStorage.setItem("notes", JSON.stringify(notesObj));
-  selected = 0;
-  localStorage.setItem("select", selected);
   showNotes();
 });
 
